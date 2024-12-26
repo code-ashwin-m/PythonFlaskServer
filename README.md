@@ -30,7 +30,7 @@ class UserDTO:
         return f"UserDTO(user_id={self.user_id}, name='{self.name}', email='{self.email}')"
 ```
 
-###Data Access Object (DAO)
+### Data Access Object (DAO)
 
 The UserDAO class manages the interactions with the database. It supports operations like CRUD (Create, Read, Update, Delete).
 
@@ -95,7 +95,7 @@ class UserDAO:
             return result.rowcount > 0
 ```
 
-##Example Usage
+## Example Usage
 
 ### Example usage
 ```python
@@ -122,13 +122,13 @@ if __name__ == "__main__":
     dao.delete_user(user_id)
     print("All users after deletion:", dao.get_all_users())
 ```
-##Features
+## Features
 	•	Lightweight DTO for data transfer
 	•	DAO implementation for database interactions
 	•	Basic CRUD operations (Create, Read, Update, Delete)
 	•	Uses SQLite for simplicity
 
-Directory Structure
+## Directory Structure
 
 .
 ├── main.py        # Entry point with usage examples
