@@ -135,3 +135,43 @@ if __name__ == "__main__":
 ├── dao.py         # DAO implementation
 ├── dto.py         # DTO implementation
 └── README.md      # Documentation
+
+### SQL Date data
+
+```python
+import sqlite3
+from datetime import datetime
+
+# Step 1: Connect to the database
+connection = sqlite3.connect("example.db")
+cursor = connection.cursor()
+
+# Step 2: Create a table with a DATE column
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        event_date TEXT NOT NULL
+    )
+""")
+connection.commit()
+
+# Step 3: Insert a date into the table
+event_name = "New Year's Eve"
+event_date = datetime.now().strftime('%Y-%m-%d')  # Format as 'YYYY-MM-DD'
+cursor.execute("INSERT INTO events (name, event_date) VALUES (?, ?)", (event_name, event_date))
+connection.commit()
+print(f"Inserted event: {event_name} on {event_date}")
+
+# Step 4: Retrieve and display the date data
+cursor.execute("SELECT id, name, event_date FROM events")
+rows = cursor.fetchall()
+
+for row in rows:
+    event_id, name, event_date = row
+    parsed_date = datetime.strptime(event_date, '%Y-%m-%d')  # Parse the date string
+    print(f"Event ID: {event_id}, Name: {name}, Date: {parsed_date}")
+
+# Step 5: Close the connection
+connection.close()
+```
