@@ -1,4 +1,3 @@
-Here’s the response converted into GitHub-supported README.md syntax:
 
 # Python DAO and DTO Example
 
@@ -29,11 +28,13 @@ class UserDTO:
 
     def __repr__(self):
         return f"UserDTO(user_id={self.user_id}, name='{self.name}', email='{self.email}')"
+```
 
-Data Access Object (DAO)
+###Data Access Object (DAO)
 
 The UserDAO class manages the interactions with the database. It supports operations like CRUD (Create, Read, Update, Delete).
 
+```python
 import sqlite3
 from typing import List, Optional
 
@@ -92,10 +93,12 @@ class UserDAO:
                 (user_id,)
             )
             return result.rowcount > 0
+```
 
-Example Usage
+##Example Usage
 
-# Example usage
+### Example usage
+```python
 if __name__ == "__main__":
     dao = UserDAO()
 
@@ -118,19 +121,8 @@ if __name__ == "__main__":
     # Delete user
     dao.delete_user(user_id)
     print("All users after deletion:", dao.get_all_users())
-
-How to Run
-	1.	Clone the repository:
-
-git clone https://github.com/your-username/python-dao-dto-example.git
-cd python-dao-dto-example
-
-
-	2.	Run the example:
-
-python main.py
-
-Features
+```
+##Features
 	•	Lightweight DTO for data transfer
 	•	DAO implementation for database interactions
 	•	Basic CRUD operations (Create, Read, Update, Delete)
@@ -143,11 +135,3 @@ Directory Structure
 ├── dao.py         # DAO implementation
 ├── dto.py         # DTO implementation
 └── README.md      # Documentation
-
-License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-### Key Points:
-- GitHub's Markdown syntax supports headers (`#`), code blocks (indented with 3 backticks ` ``` `), and lists.
-- Replace the repository URL in the `git clone` command and ensure the directory structure matches your project.
