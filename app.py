@@ -1,16 +1,23 @@
 from flask import Flask
 from flask import render_template
 from flask import request
-from app.types import UserData
-from app import SignUpService;
+from system.types import UserData
+from system import UserService;
+import json 
 
-app = Flask(__name__)
+app = Flask(__name__,
+    static_url_path='', 
+    static_folder='web/static',
+    template_folder='web/templates')
 
-signupService = SignUpService()
+user_service = UserService()
 
 @app.route("/")
-def home():
-    return "Hello, Flask!"
+def home(name = None):
+    return render_template(
+        "index.html",
+        name=name
+    )
 
 @app.route("/signup")
 def signup(name = None):
@@ -30,11 +37,18 @@ def signin(name = None):
 @app.route("/api/signup", methods=['POST'])
 def signupapi():
     if request.method == 'POST':
-        username = request.form['email']
+        name = request.form['name']
+        email = request.form['email']
         password = request.form['password']
-        print(username, password)
-        userdata = UserData(username, password)
-
-        return signupService.signup(userdata)
+        userdata = UserData(None, email, password, name, 0)
+    
+        try:
+            new_user = user_service.signup(userdata)
+            jsonstr = json.dumps(new_user.__dict__) 
+            return jsonstr
+        except Exception as ex:
+            return {
+                "error": str(ex)
+            }
     else:
         return "methon is not POST"
