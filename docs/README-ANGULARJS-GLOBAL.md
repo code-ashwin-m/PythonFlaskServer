@@ -13,9 +13,11 @@ app.service('SharedService', function () {
         value: 'Hello, World!' // Initial value of the global variable
     };
 });
+```
 
 2. Define Two Controllers to Access the Shared Variable
-
+   
+```javascript
 // First controller to read and modify the shared variable
 app.controller('FirstController', ['$scope', 'SharedService', function ($scope, SharedService) {
     $scope.sharedData = SharedService.sharedData; // Bind to the shared data
