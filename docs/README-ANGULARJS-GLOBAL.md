@@ -61,13 +61,13 @@ app.controller('SecondController', ['$scope', 'SharedService', function ($scope,
 ```
 
 Explanation:
-	1.	SharedService:
-	•	Acts as a single source of truth for the shared variable (sharedData).
-	•	Any changes made to sharedData in one controller are automatically reflected in the other controller due to AngularJS’s two-way data binding.
-	2.	Controllers:
-	•	Both controllers inject SharedService to access the shared variable.
-	•	They bind SharedService.sharedData to their $scope to enable two-way data binding in the view.
-	3.	HTML:
-	•	Displays the shared variable’s value and provides an input for updating it.
+1. SharedService:
+  - Acts as a single source of truth for the shared variable (sharedData).
+  - Any changes made to sharedData in one controller are automatically reflected in the other controller due to AngularJS’s two-way data binding.
+2. Controllers:
+  - Both controllers inject SharedService to access the shared variable.
+  - They bind SharedService.sharedData to their $scope to enable two-way data binding in the view.
+3. HTML:
+  - Displays the shared variable’s value and provides an input for updating it.
 
 This approach ensures that the shared data is consistent and synchronized across controllers.
