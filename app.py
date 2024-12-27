@@ -1,8 +1,8 @@
 from flask import Flask
 from flask import render_template
 from flask import request
-from models.userdata import UserData
-from backend.signup_service import SignUpService
+from app.types import UserData
+from app import SignUpService;
 
 app = Flask(__name__)
 

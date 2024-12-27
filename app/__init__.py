@@ -1,4 +1,4 @@
-from models.userdata import UserData
+from userdata import UserData
 import sqlite3
 
 class SignUpService():
@@ -28,7 +28,3 @@ class SignUpService():
                 return "Incorrect email or password"
         else:
             return "User is not present"
-        
-        
-        
-            
