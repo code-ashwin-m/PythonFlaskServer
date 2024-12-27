@@ -4,6 +4,7 @@ Example: Sharing a Global Variable Across Controllers
 
 1. Define the AngularJS App and Service
 
+```javascript
 var app = angular.module('myApp', []);
 
 // Service to store the global variable
@@ -28,9 +29,11 @@ app.controller('FirstController', ['$scope', 'SharedService', function ($scope, 
 app.controller('SecondController', ['$scope', 'SharedService', function ($scope, SharedService) {
     $scope.sharedData = SharedService.sharedData; // Bind to the shared data
 }]);
+```
 
 3. Define the HTML to Display and Update the Shared Variable
 
+```html
 <!DOCTYPE html>
 <html ng-app="myApp">
 <head>
@@ -55,6 +58,7 @@ app.controller('SecondController', ['$scope', 'SharedService', function ($scope,
     <script src="app.js"></script>
 </body>
 </html>
+```
 
 Explanation:
 	1.	SharedService:
