@@ -2,14 +2,13 @@
     'use strict';
 
     angular.module('myApp').controller('SignupController', ['$scope', '$http', function ($scope, $http) {
+        const url = 'api/signup';
         $scope.name = "";
         $scope.email = "";
         $scope.password = "";
         $scope.student = true;
         $scope.error = undefined;
         $scope.response = '';
-
-        const url = 'api/signup';
 
         $scope.isUndefined = function (thing) {
             return (typeof thing === "undefined");

@@ -39,6 +39,17 @@ class UserDAO:
             return UserData(*row)
         return None
     
+    def get_user_by_id(self, id: int) -> Optional[UserData]:
+        cursor = self.conn.execute(
+            "SELECT * FROM users WHERE id = ?",
+            (id,)
+        )
+        row = cursor.fetchone()
+        self.conn.close
+        if row:
+            return UserData(*row)
+        return None
+    
 class SecurityDao:
     def __init__(self):
         self.conn = sqlite3.connect(DB_URL, check_same_thread=False)

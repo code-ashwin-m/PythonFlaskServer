@@ -12,6 +12,9 @@ app = Flask(__name__,
 
 user_service = UserService()
 
+if __name__ == '__main__':
+    app.run(debug=True)
+    
 def token_required(f):
     def decorated(*args, **kwargs):
         token = request.cookies.get('token')
@@ -27,27 +30,11 @@ def token_required(f):
     return decorated
 
 @app.route("/")
-def home(name = None):
-
+def home():
     return render_template(
         "home.html",
-        name=name
+        data=json.dumps(UserData(None, '', '', 'Hai', '', '').__dict__)
     )
-
-@app.route("/signup")
-def signup(name = None):
-    return render_template(
-        "index.html",
-        name=name
-    )
-
-@app.route("/signin")
-def signin(name = None):
-    return render_template(
-        "signin.html",
-        name=name
-    )
-
 
 @app.route("/api/signup", methods=['POST'])
 def signupapi():
@@ -97,7 +84,6 @@ def signinapi():
         return "method is not POST"
 
 @app.route("/api/logut", methods=['POST'])
-@token_required
 def signoutapi():
     if request.method == 'POST':
         
@@ -116,3 +102,16 @@ def signoutapi():
         
     else:
         return "method is not POST"
+    
+@app.route("/api/user/info")
+@token_required
+def get_user_info():
+    try:
+        token = request.cookies.get('token')
+        user = user_service.get_user_info_by_token(token)
+        jsonstr = json.dumps(user.__dict__) 
+        return jsonstr
+    except Exception as ex:
+        return {
+            "error": str(ex)
+        }, 400

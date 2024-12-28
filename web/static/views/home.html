@@ -1,3 +1,38 @@
-<h2>Home</h2><p>Welcome to the home page!!!</p>
-<a href="#!/login">Sign In</a><br/>
-<a href="#!/register">Sign Up</a>
+<div class="content-wrapper">
+    <div class="row pl-3 pr-3 pt-3">
+        <div class="col-12">
+            <div class="card card-widget widget-user shadow">
+                <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="widget-user-header bg-info">
+                    <h3 class="widget-user-username">Welcome back {{userData.display_name}}</h3>
+                    <h5 class="widget-user-desc">Student</h5>
+                </div>
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{userData.pic_url}}" alt="User Avatar">
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">1</h5>
+                                <span class="description-text">TODAY CLASSES</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">3</h5>
+                                <span class="description-text">TOTAL ENROLLED</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="description-block">
+                                <h5 class="description-header">2</h5>
+                                <span class="description-text">UPCOMING</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

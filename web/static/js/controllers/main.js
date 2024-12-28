@@ -1,11 +1,15 @@
 (function () {
     'use strict';
 
-    angular.module('myApp').controller('MainController', ['$scope', '$http', 'TokenService', function ($scope, $http, TokenService) {
+    angular.module('myApp').controller('MainController', ['$scope', '$http', '$location', '$rootScope', 'SharedService', function ($scope, $http, $location, $rootScope, SharedService) {
         const url = 'api/logut';
-        
-        $scope.isLogged = TokenService.getToken() !== undefined;
-        console.log("isLogged = " + $scope.isLogged);
+        console.log('MainController loaded');
+        $rootScope.isLogged = SharedService.getToken() !== undefined;
+        $scope.userInfo = undefined;
+
+        if (!$rootScope.isLogged){
+            $location.url('/login')
+        }
         $scope.logout = function () {
             $http({
                 method: 'POST',
@@ -13,10 +17,16 @@
                 withCredentials: true // Enable sending cookies with the request
             }).then(function (response) {
                 $scope.response = response.data;
-                $location.url('/')
+                $rootScope.isLogged = false;
+                $location.url('/login')
             }).catch(function (error) {
-                $scope.error = error.data.error;
+                $scope.error = error.data
             })
         }
+
+        $scope.$on('userDataAdded', function(event, data) {
+            console.log(data);
+            $scope.data = data;
+        })
     }]);
 }());

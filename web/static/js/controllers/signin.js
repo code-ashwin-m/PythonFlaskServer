@@ -1,14 +1,13 @@
 (function () {
     'use strict';
 
-    angular.module('myApp').controller('SigninController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    angular.module('myApp').controller('SigninController', ['$scope', '$http', '$location', '$rootScope', function ($scope, $http, $location, $rootScope) {
+        const url = 'api/login';
         $scope.email = "";
         $scope.password = "";
         $scope.error = undefined;
         $scope.response = '';
-
-        const url = 'api/login';
-
+        
         $scope.isUndefined = function (thing) {
             return (typeof thing === "undefined");
         }
@@ -32,12 +31,12 @@
                 $scope.error += errors.join(", ");
             } else {
                 $http({
-                        method: 'POST',
-                        url: url,
-                        data: user,
-                        withCredentials: true // Enable sending cookies with the request
+                    method: 'POST',
+                    url: url,
+                    data: user,
+                    withCredentials: true // Enable sending cookies with the request
                 }).then(function(response) {
-                    $scope.response = response.data;
+                    $rootScope.isLogged = true;
                     $location.url('/')
                 }).catch(function(error) {
                     $scope.error = error.data.error;

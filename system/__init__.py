@@ -42,5 +42,10 @@ class UserService():
         if (securityDto == None):
             raise Exception("Invalid/Expired token")
         return securityDto
+    
+    def get_user_info_by_token(self, token: str):
+        securityDto: SecurityDto = self.securityDao.get_security_by_token(token)
+        user = self.dao.get_user_by_id(securityDto.user_id)
+        return user
         
         

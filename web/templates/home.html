@@ -8,8 +8,10 @@
     <script src="js/angularjs/angular.min.js"></script>
     <script src="js/angularjs/angular-route.min.js"></script>
     <script src="js/angularjs/angular-cookies.min.js"></script>
-    
+
     <link rel="stylesheet" href="css/adminlte.min.css">
+    <link rel="stylesheet" href="css/fontawesome/css/all.min.css">
+
 </head>
 
 <body class="layout-top-nav">
@@ -18,45 +20,23 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                </li> -->
+                <li class="nav-item">
                     <a href="/" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block" ng-show="isLogged">
-                    <button class="nav-link" ng-click="logout()">Logout</button>
                 </li>
             </ul>
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
+                <li class="nav-item dropdown" ng-show="isLogged">
+                    <button class="btn btn-block btn-default btn-sm" data-toggle="dropdown" aria-expanded="true">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                        <a class="dropdown-item" ng-click="logout()" href="#">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                     </div>
                 </li>
             </ul>
@@ -64,14 +44,17 @@
         <!-- View Container -->
         <div class="view-container" ng-view></div>
     </div>
+    <script src="js/jquery/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="js/adminlte.min.js"></script>
     <script src="js/core/app.js"></script>
     <script src="js/core/router.js"></script>
     <script src="js/services/app.js"></script>
     <script src="js/controllers/home.js"></script>
-    <script src="js/controllers/main.js"></script>
     <script src="js/controllers/signup.js"></script>
     <script src="js/controllers/signin.js"></script>
+    <script src="js/controllers/main.js"></script>
+    
 </body>
 
 </html>
