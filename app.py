@@ -15,7 +15,7 @@ user_service = UserService()
 @app.route("/")
 def home(name = None):
     return render_template(
-        "index.html",
+        "home.html",
         name=name
     )
 
@@ -37,10 +37,15 @@ def signin(name = None):
 @app.route("/api/signup", methods=['POST'])
 def signupapi():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        userdata = UserData(None, email, password, name, 0)
+        data = request.get_json();
+        name = data.get('name', '')
+        email = data.get('email', '')
+        password = data.get('password', '')
+        role = 2
+        if (data.get('student', False) == True):
+            role =  1
+
+        userdata = UserData(None, email, password, name, role)
     
         try:
             new_user = user_service.signup(userdata)
@@ -49,6 +54,6 @@ def signupapi():
         except Exception as ex:
             return {
                 "error": str(ex)
-            }
+            }, 400
     else:
         return "methon is not POST"
