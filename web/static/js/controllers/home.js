@@ -13,7 +13,17 @@
             withCredentials: true
         }).then(function(response) {
             $scope.userData = response.data;
-            $rootScope.$broadcast('userDataAdded', $scope.userData);
+            switch (response.data.role) {
+                case 1:
+                    $scope.userType = "STUDENT"
+                    break;
+                case 2:
+                    $scope.userType = "TEACHER"
+                    break;
+                default:
+                    $scope.userType = "ADMIN"
+                    break;
+            }
         }).catch(function(error) {
             
         })

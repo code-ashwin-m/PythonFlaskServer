@@ -23,10 +23,5 @@
                 $scope.error = error.data
             })
         }
-
-        $scope.$on('userDataAdded', function(event, data) {
-            console.log(data);
-            $scope.data = data;
-        })
     }]);
 }());

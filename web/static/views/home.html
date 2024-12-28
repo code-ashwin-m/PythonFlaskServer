@@ -5,7 +5,7 @@
                 <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="widget-user-header bg-info">
                     <h3 class="widget-user-username">Welcome back {{userData.display_name}}</h3>
-                    <h5 class="widget-user-desc">Student</h5>
+                    <h5 class="widget-user-desc">{{userType}}</h5>
                 </div>
                 <div class="widget-user-image">
                     <img class="img-circle elevation-2" src="{{userData.pic_url}}" alt="User Avatar">
@@ -31,6 +31,62 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Subject List</h3>
+
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="table_search" class="form-control float-right"
+                                placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subject</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>183</td>
+                                <td>Commerce</td>
+                                <td>11-7-2014</td>
+                                <td>11-7-2014</td>
+                            </tr>
+                            <tr>
+                                <td>219</td>
+                                <td>Sceince</td>
+                                <td>11-7-2014</td>
+                                <td>11-7-2014</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <ul class="m-0 float-right">
+                        <li class="navbar-nav">
+                            <button type="submit" class="btn btn-block btn-primary btn-sm">
+                                Add New Subject
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
