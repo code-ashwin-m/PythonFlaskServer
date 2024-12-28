@@ -1,8 +1,8 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, make_response, jsonify
 from flask import request
 from system.types import UserData
-from system import UserService;
+from system import UserService
 import json 
 
 app = Flask(__name__,
@@ -12,8 +12,23 @@ app = Flask(__name__,
 
 user_service = UserService()
 
+def token_required(f):
+    def decorated(*args, **kwargs):
+        token = request.cookies.get('token')
+        if not token:
+            return jsonify({'error': 'token is missing'}), 403
+        try:
+            user_service.security_check(token)
+        except Exception as ex:
+            return {
+                "error": str(ex)
+            }, 400
+        return f(*args, **kwargs)
+    return decorated
+
 @app.route("/")
 def home(name = None):
+
     return render_template(
         "home.html",
         name=name
@@ -66,11 +81,34 @@ def signinapi():
         password = data.get('password', '')
 
         userdata = UserData(None, email, password, None, None)
-
+        
         try:
-            new_user = user_service.signin(userdata)
-            jsonstr = json.dumps(new_user.__dict__) 
-            return jsonstr
+            sign_in_data = user_service.signin(userdata)
+            jsonstr = json.dumps(sign_in_data['user'].__dict__) 
+            resp = make_response(jsonstr)
+            resp.set_cookie('token', sign_in_data['security'].token)
+            return resp
+        except Exception as ex:
+            return {
+                "error": str(ex)
+            }, 400
+        
+    else:
+        return "method is not POST"
+
+@app.route("/api/logut", methods=['POST'])
+@token_required
+def signoutapi():
+    if request.method == 'POST':
+        
+        try:
+            token = request.cookies.get('token')
+            sign_out_data = user_service.signout(token)
+            resp = make_response("{\"status\": true}")
+
+            if (sign_out_data == True):
+                resp.delete_cookie('token')
+            return resp
         except Exception as ex:
             return {
                 "error": str(ex)

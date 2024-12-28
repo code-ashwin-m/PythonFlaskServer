@@ -1,12 +1,13 @@
-from system.types import UserData
-from system.daos import UserDAO
-import sqlite3, json
+from system.types import UserData, SecurityDto
+from system.daos import UserDAO, SecurityDao
+import sqlite3, json, uuid
 
 class UserService(): 
     def __init__(self):
         self.conn = sqlite3.connect('database/users.db', check_same_thread=False)
         self.cursor = self.conn.cursor()
         self.dao = UserDAO()
+        self.securityDao = SecurityDao()
 
     def signup(self, userdata: UserData):
         current_user:UserData = self.dao.get_user_by_email(userdata.email)
@@ -22,7 +23,24 @@ class UserService():
 
         if (current_user == None or current_user.password != userdata.password):
             raise Exception("Email/Password is invalid")
-        return current_user
+        
+        token = str(uuid.uuid4());
+        securityDto = SecurityDto(None, current_user.id, token)
+        securityDto_new = self.securityDao.add_security(securityDto)
+    
+        return {
+            'user': current_user,
+            'security': securityDto_new
+        }
+    
+    def signout(self, token: str):
+        is_deteted = self.securityDao.delete_security_by_token(token)
+        return is_deteted
 
+    def security_check(self, token):
+        securityDto: SecurityDao = self.securityDao.get_security_by_token(token)
+        if (securityDto == None):
+            raise Exception("Invalid/Expired token")
+        return securityDto
         
         

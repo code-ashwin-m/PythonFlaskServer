@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('myApp').controller('SigninController', ['$scope', '$http', function ($scope, $http) {
+    angular.module('myApp').controller('SigninController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
         $scope.email = "";
         $scope.password = "";
         $scope.error = undefined;
@@ -31,14 +31,17 @@
                 $scope.error = "";
                 $scope.error += errors.join(", ");
             } else {
-                $http.post(url, user).then(
-                    function successCallback(response) {
-                        $scope.response = response.data;
-                    },
-                    function errorCallback(error) {
-                        $scope.error = error.data.error;
-                    }
-                );
+                $http({
+                        method: 'POST',
+                        url: url,
+                        data: user,
+                        withCredentials: true // Enable sending cookies with the request
+                }).then(function(response) {
+                    $scope.response = response.data;
+                    $location.url('/')
+                }).catch(function(error) {
+                    $scope.error = error.data.error;
+                })
             }
         };
     }]);

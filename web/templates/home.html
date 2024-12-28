@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp" ng-debug>
 
 <head>
     <meta charset="UTF-8">
@@ -7,11 +7,13 @@
     <title>Class Room</title>
     <script src="js/angularjs/angular.min.js"></script>
     <script src="js/angularjs/angular-route.min.js"></script>
+    <script src="js/angularjs/angular-cookies.min.js"></script>
+    
     <link rel="stylesheet" href="css/adminlte.min.css">
 </head>
 
 <body class="layout-top-nav">
-    <div class="wrapper">
+    <div class="wrapper" ng-controller="MainController">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -20,10 +22,13 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a href="/" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block" ng-show="isLogged">
+                    <button class="nav-link" ng-click="logout()">Logout</button>
                 </li>
             </ul>
             <!-- Right navbar links -->
@@ -62,7 +67,9 @@
     <script src="js/adminlte.min.js"></script>
     <script src="js/core/app.js"></script>
     <script src="js/core/router.js"></script>
+    <script src="js/services/app.js"></script>
     <script src="js/controllers/home.js"></script>
+    <script src="js/controllers/main.js"></script>
     <script src="js/controllers/signup.js"></script>
     <script src="js/controllers/signin.js"></script>
 </body>
