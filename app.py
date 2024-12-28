@@ -56,4 +56,25 @@ def signupapi():
                 "error": str(ex)
             }, 400
     else:
-        return "methon is not POST"
+        return "method is not POST"
+    
+@app.route("/api/login", methods=['POST'])
+def signinapi():
+    if request.method == 'POST':
+        data = request.get_json();
+        email = data.get('email', '')
+        password = data.get('password', '')
+
+        userdata = UserData(None, email, password, None, None)
+
+        try:
+            new_user = user_service.signin(userdata)
+            jsonstr = json.dumps(new_user.__dict__) 
+            return jsonstr
+        except Exception as ex:
+            return {
+                "error": str(ex)
+            }, 400
+        
+    else:
+        return "method is not POST"

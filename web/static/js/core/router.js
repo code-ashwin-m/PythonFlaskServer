@@ -11,6 +11,10 @@
                 templateUrl: 'views/signup.html',
                 controller: 'SignupController'
             })
+            .when('/login', {
+                templateUrl: 'views/signin.html',
+                controller: 'SigninController'
+            })
             .otherwise({
                 redirectTo: '/'
             });

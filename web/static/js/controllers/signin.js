@@ -1,33 +1,26 @@
 (function () {
     'use strict';
 
-    angular.module('myApp').controller('SignupController', ['$scope', '$http', function ($scope, $http) {
-        $scope.name = "";
+    angular.module('myApp').controller('SigninController', ['$scope', '$http', function ($scope, $http) {
         $scope.email = "";
         $scope.password = "";
-        $scope.student = true;
         $scope.error = undefined;
         $scope.response = '';
 
-        const url = 'api/signup';
+        const url = 'api/login';
 
         $scope.isUndefined = function (thing) {
             return (typeof thing === "undefined");
         }
 
-        $scope.register = function () {
+        $scope.signin = function () {
             $scope.error = undefined;
             let user = {
-                name: $scope.name,
                 email: $scope.email,
                 password: $scope.password,
-                student: $scope.student
             }
-            console.log(user)
             var errors = [];
-            if (user.name == "") {
-                errors.push("Name is missing!");
-            }
+
             if (user.email == undefined || user.email == "") {
                 errors.push("Email is missing/invalid!");
             }
