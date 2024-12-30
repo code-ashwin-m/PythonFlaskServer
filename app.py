@@ -1,7 +1,7 @@
 from flask import Flask
-from flask import render_template, make_response, jsonify, redirect, url_for
+from flask import render_template, make_response, jsonify, redirect, url_for, session
 from flask import request
-from models import UserDto
+from models import AppData, UserDto, SecurityDto
 
 from system import UserService
 import json 
@@ -10,6 +10,7 @@ app = Flask(__name__,
     static_url_path='', 
     static_folder='web/static',
     template_folder='web/templates')
+app.secret_key = 'af48cd8c-b54b-41bf-ab20-6e8b034c9d5d'  # Change this to a random secret key
 
 user_service = UserService()
 
@@ -25,9 +26,20 @@ def token_required(f):
            security_dto = user_service.security_check(token)
         except Exception as ex:
             return redirect(url_for('login'))
-        return f(*args, **kwargs)
+        return f(security_dto, *args, **kwargs)
     decorated.__name__ = f.__name__
     return decorated
+
+
+@app.context_processor
+def inject_user_data():
+    is_authenticated = None
+    if 'user_id' in session:
+        is_authenticated = True
+    return {
+            'is_authenticated': is_authenticated, 
+            'site_name': 'My Flask App'
+        }
 
 @app.route("/")
 def index():
@@ -58,8 +70,10 @@ def login():
         try:
             user_dto = UserDto(None, email, password, None, None) 
             sign_in_data = user_service.signin(user_dto)
+            session['user_id'] = sign_in_data['user'].id
             resp = make_response(redirect('dashboard'))
             resp.set_cookie('token', sign_in_data['security'].token)
+            
             return resp
         except Exception as ex:
             return render_template("login.html", error=ex)
@@ -67,10 +81,10 @@ def login():
 
 @app.route("/logout", methods=['GET', 'POST'])
 @token_required
-def logout():
-    token = request.cookies.get('token')
+def logout(security_dto: SecurityDto):
     try:
-        sign_out_data = user_service.signout(token)
+        sign_out_data = user_service.signout(security_dto.token)
+        session.pop('user_id', None)
         resp = make_response(redirect('login'))
         resp.set_cookie('token', '')
         return resp
@@ -79,5 +93,19 @@ def logout():
     
 @app.route("/dashboard")
 @token_required
-def dashboard():
-    return render_template("dashboard.html")
+def dashboard(security_dto: SecurityDto):
+    user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
+    app_data = AppData()
+    app_data.user = user_dto
+    return render_template("dashboard.html", data=app_data)
+
+@app.route("/user")
+@token_required
+def user(security_dto: SecurityDto):
+    user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
+    app_data = AppData()
+    app_data.user = user_dto
+    return render_template("user.html", data=app_data)
+
+
+    

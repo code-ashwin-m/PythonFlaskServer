@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{%block content%} 
+    <h1>Edit Profile</h1>
+    <p>Name: {{ data.user.display_name }}!</p>
+
+    <a href="{{ url_for ('user') }}">Add New Subject</a>
+    <table border="1">
+        <thead>
+            <th>Subject</th>
+            <th>Start Date</th>
+            <th>Start Time</th>
+            <th>End Date</th>
+            <th>End Time</th>
+            <th>Actions</th>
+        </thead>
+    </table>
+{% endblock %}

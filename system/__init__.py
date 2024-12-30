@@ -48,5 +48,9 @@ class UserService():
         securityDto: SecurityDto = self.securityDao.get_security_by_token(token)
         user = self.dao.get_user_by_id(securityDto.user_id)
         return user
+    
+    def get_user_info_by_id(self, user_id: int):
+        user = self.dao.get_user_by_id(user_id)
+        return user
         
         

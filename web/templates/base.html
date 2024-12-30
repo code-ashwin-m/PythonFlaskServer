@@ -11,9 +11,14 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for ('index') }}">Home</a></li>
+                {% if is_authenticated != True %}
                 <li><a href="{{ url_for ('register') }}">Register</a></li>
                 <li><a href="{{ url_for ('login') }}">Login</a></li>
+                {% else %}
+                <li><a href="{{ url_for ('user') }}">Profile</a></li>
+                <li><a href="{{ url_for ('dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ url_for ('logout') }}">Logout</a></li>
+                {% endif %}
             </ul>
         </nav>
         <main>
