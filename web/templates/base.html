@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp" ng-debug>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +12,14 @@
             <ul>
                 <li><a href="{{ url_for ('index') }}">Home</a></li>
                 <li><a href="{{ url_for ('register') }}">Register</a></li>
+                <li><a href="{{ url_for ('login') }}">Login</a></li>
+                <li><a href="{{ url_for ('logout') }}">Logout</a></li>
             </ul>
         </nav>
+        <main>
+            {% block content %} 
+            {% endblock %} 
+        </main>
     </header>
 </body>
 </html>

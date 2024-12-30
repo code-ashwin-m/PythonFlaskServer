@@ -3,14 +3,9 @@
     {% if error != None %}
     <p>{{ error }}</p>
     {% endif %}
-    <form action="/register" method="post">
-        <input type="text" placeholder="Full Name" id="name" name="name"> <br/>
+    <form action="/login" method="post">
         <input type="email" placeholder="Email" id="email" name="email"> <br/>
         <input type="password" placeholder="Password" name="password" id="password"> <br/>
-        <select name="role" id="role">
-            <option value="1" selected>Student</option>
-            <option value="2">Teacher</option>
-        </select>
         <input type="submit" value="Submit" /> <br/>
     </form>
 {% endblock %}

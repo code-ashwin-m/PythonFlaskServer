@@ -1,6 +1,7 @@
 from system.types import UserData, SecurityDto
 from system.daos import UserDAO, SecurityDao
 import sqlite3, json, uuid
+from typing import List, Optional
 
 class UserService(): 
     def __init__(self):
@@ -37,7 +38,7 @@ class UserService():
         is_deteted = self.securityDao.delete_security_by_token(token)
         return is_deteted
 
-    def security_check(self, token):
+    def security_check(self, token) -> Optional[SecurityDto]:
         securityDto: SecurityDao = self.securityDao.get_security_by_token(token)
         if (securityDto == None):
             raise Exception("Invalid/Expired token")
