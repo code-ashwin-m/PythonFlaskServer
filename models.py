@@ -20,6 +20,13 @@ class SecurityDto:
         self.created_datetime = created_datetime
         self.modified_datetime = modified_datetime
 
+class SubjectDto:
+    def __init__(self, id: int, name: str, created_datetime: Optional[str] = None, modified_datetime: Optional[str] = None):
+        self.id = id
+        self.name = name
+        self.created_datetime = created_datetime
+        self.modified_datetime = modified_datetime
+
 class AvailabilityDto:
     def __init__(self, id: int, subject_id: int, user_id: int, 
                  start_date: Optional[str] = None, 

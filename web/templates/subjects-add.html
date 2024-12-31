@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {%block content%} 
     <h1>Add Subject</h1>
+
     <form action="/subjects/add" method="post"> 
         <table>
             <tr>
                 <td>Subject</td>
                 <td>
                     <select name="subject" id="subject">
-                        <option value="1">Commerce</option>
-                        <option value="2">Sceince</option>
+                        {% for item in subject_list %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
                     </select>
                 </td>
             </tr>

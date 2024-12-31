@@ -102,8 +102,12 @@ def dashboard(security_dto: SecurityDto):
 @token_required
 def user(security_dto: SecurityDto):
     user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
-    availability_list: List[AvailabilityDto] = profile_service.get_all_subjects(security_dto.user_id)
-    return render_template("user.html", user=user_dto, availability_list=availability_list)
+    availability_list: List[AvailabilityDto] = profile_service.get_all_subjects_by_user_id(security_dto.user_id)
+    return render_template(
+        "user.html", 
+        user=user_dto, 
+        availability_list=availability_list
+    )
 
 @app.route("/subjects")
 @token_required
@@ -125,7 +129,10 @@ def subject_add(security_dto: SecurityDto):
         availability_dto = profile_service.add_availability(availability_dto)
         resp = make_response(redirect('/user'))
         return resp
-    return render_template("subjects-add.html")
+
+    subject_list = profile_service.get_all_subjects()
+    print(subject_list[0].name)
+    return render_template("subjects-add.html", subject_list=subject_list)
 
 
 @app.route("/subjects/<int:availability_id>/delete", methods=['GET'])

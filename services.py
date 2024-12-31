@@ -1,5 +1,5 @@
-from models import UserDto, SecurityDto, AvailabilityDto
-from daos import UserDAO, SecurityDao, AvailabilityDAO
+from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto
+from daos import UserDAO, SecurityDao, AvailabilityDAO, SubjectDAO
 import sqlite3, json, uuid
 from typing import List, Optional
 
@@ -55,6 +55,7 @@ class UserService():
 class ProfileService(): 
     def __init__(self):
         self.availability_dao = AvailabilityDAO()
+        self.subject_dao = SubjectDAO()
 
     
     def add_availability(self, availability_dto: AvailabilityDto):
@@ -64,6 +65,10 @@ class ProfileService():
     def delete_availability(self, id: int):
         self.availability_dao.delete_availability(id)
 
-    def get_all_subjects(self, user_id: int) -> List[AvailabilityDto]:
+    def get_all_subjects(self) -> List[SubjectDto]:
+        list_items = self.subject_dao.get_all_subjects()
+        return list_items
+    
+    def get_all_subjects_by_user_id(self, user_id: int) -> List[AvailabilityDto]:
         list_items = self.availability_dao.get_all_subjects(user_id)
         return list_items

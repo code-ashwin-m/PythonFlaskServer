@@ -1,6 +1,6 @@
 import sqlite3, json
 from typing import List, Optional
-from models import UserDto, SecurityDto, AvailabilityDto
+from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto
 from datetime import datetime, timezone, timedelta
 
 DB_URL = 'database/users.db'
@@ -134,6 +134,22 @@ class AvailabilityDAO:
                 (user_id,)
             )
             rows = result.fetchall()
+            self.conn.close
             return [AvailabilityDto(*row) for row in rows]
         
+class SubjectDAO:
+    def __init__(self):
+        self.conn = sqlite3.connect(DB_URL, check_same_thread=False)
+        self.create_table()
+    
+    def create_table(self):
+        return None
 
+
+    def get_all_subjects(self) -> List[SubjectDto]:
+        result = self.conn.execute(
+            "SELECT * FROM Subjects"
+        )
+        rows = result.fetchall()
+        self.conn.close
+        return [SubjectDto(*row) for row in rows]
