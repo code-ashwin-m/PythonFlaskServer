@@ -1,17 +1,15 @@
-from system.types import UserData, SecurityDto
-from system.daos import UserDAO, SecurityDao
+from models import UserDto, SecurityDto, AvailabilityDto
+from daos import UserDAO, SecurityDao, AvailabilityDAO
 import sqlite3, json, uuid
 from typing import List, Optional
 
 class UserService(): 
     def __init__(self):
-        self.conn = sqlite3.connect('database/users.db', check_same_thread=False)
-        self.cursor = self.conn.cursor()
         self.dao = UserDAO()
         self.securityDao = SecurityDao()
 
-    def signup(self, userdata: UserData):
-        current_user:UserData = self.dao.get_user_by_email(userdata.email)
+    def signup(self, userdata: UserDto):
+        current_user:UserDto = self.dao.get_user_by_email(userdata.email)
         if (current_user != None):
             raise Exception("User already exists")
         user_new = self.dao.add_user(userdata)
@@ -19,7 +17,7 @@ class UserService():
             raise Exception("User not created")
         return userdata
     
-    def signin(self, userdata: UserData):
+    def signin(self, userdata: UserDto):
         current_user = self.dao.get_user_by_email(userdata.email)
 
         if (current_user == None or current_user.password != userdata.password):
@@ -54,3 +52,18 @@ class UserService():
         return user
         
         
+class ProfileService(): 
+    def __init__(self):
+        self.availability_dao = AvailabilityDAO()
+
+    
+    def add_availability(self, availability_dto: AvailabilityDto):
+        new_item = self.availability_dao.add_availability(availability_dto)
+        return new_item
+    
+    def delete_availability(self, id: int):
+        self.availability_dao.delete_availability(id)
+
+    def get_all_subjects(self, user_id: int) -> List[AvailabilityDto]:
+        list_items = self.availability_dao.get_all_subjects(user_id)
+        return list_items

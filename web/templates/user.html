@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 {%block content%} 
     <h1>Edit Profile</h1>
-    <p>Name: {{ data.user.display_name }}!</p>
+    <p>Name: {{ user.display_name }}!</p>
 
-    <a href="{{ url_for ('user') }}">Add New Subject</a>
+    <a href="{{ url_for ('subject_add') }}">Add New Subject</a>
     <table border="1">
-        <thead>
+        <tr>
             <th>Subject</th>
             <th>Start Date</th>
-            <th>Start Time</th>
             <th>End Date</th>
+            <th>Start Time</th>
             <th>End Time</th>
+            <th>Days</th>
             <th>Actions</th>
-        </thead>
+        </tr>
+        {% for item in availability_list %}
+        <tr>
+            <td>{{ item.subject_name }}</td>
+            <td>{{ item.start_date }}</td>
+            <td>{{ item.end_date }}</td>
+            <td>{{ item.start_time }}</td>
+            <td>{{ item.end_time }}</td>
+            <td>{{ item.days }}</td>
+            <td>
+                <a href="/subjects/{{ item.id }}/delete">[Delete]</a>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
+
+
 {% endblock %}
