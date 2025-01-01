@@ -70,31 +70,62 @@ def register():
             return render_template("register.html", error=ex)
     return render_template("register.html")
 
+
+@app.route("/api/login", methods=['POST'])
+def api_login():
+    data = request.get_json();
+    email = data.get('email', '')
+    password = data.get('password', '')
+    try:
+        sign_in_data = login(email, password)
+        jsonstr = json.dumps(sign_in_data) 
+        # return jsonstr, 200, {'Content-Type': 'application/json; charset=utf-8'}
+        resp = make_response(jsonstr)
+        resp.headers["Content-Type"] = "application/json; charset=utf-8"
+        resp.set_cookie('token', sign_in_data['security']['token'])
+        return resp
+    except Exception as ex:
+        return "{\"error\"=\"" + str(ex) + "\"}"
+
 @app.route("/login", methods=['GET', 'POST'])
-def login():
+def web_login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-
         try:
-            user_dto = UserDto(None, email, password, None, None) 
-            sign_in_data = user_service.signin(user_dto)
-            session['user_id'] = sign_in_data['user'].id
+            sign_in_data = login(email, password)
+            session['user_id'] = sign_in_data['user']['id']
             resp = make_response(redirect('dashboard'))
-            resp.set_cookie('token', sign_in_data['security'].token)
-            
+            resp.set_cookie('token', sign_in_data['security']['token'])
             return resp
         except Exception as ex:
             return render_template("login.html", error=ex)
     return render_template("login.html")
 
+def login(email: str, password: str):
+    user_dto = UserDto(None, email, password, None, None) 
+    sign_in_data = user_service.signin(user_dto)
+    return sign_in_data
+
+@app.route("/api/logout", methods=['POST'])
+def api_logout():
+    try:
+        token = request.cookies.get('token')
+        sign_out_data = user_service.signout(token)
+        resp = make_response("{\"status\"=\"success\"}")
+        resp.headers["Content-Type"] = "application/json; charset=utf-8"
+        resp.set_cookie('token', '')
+        return resp
+    except Exception as ex:
+        return "{\"error\"=\"" + str(ex) + "\"}"
+    
 @app.route("/logout", methods=['GET', 'POST'])
 @token_required
-def logout(security_dto: SecurityDto):
+def web_logout(security_dto: SecurityDto):
     try:
         sign_out_data = user_service.signout(security_dto.token)
         session.pop('user_id', None)
-        resp = make_response(redirect('login'))
+        resp = make_response(redirect(url_for('web_login')))
         resp.set_cookie('token', '')
         return resp
     except Exception as ex:

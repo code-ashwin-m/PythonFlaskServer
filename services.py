@@ -28,8 +28,8 @@ class UserService():
         securityDto_new = self.securityDao.add_security(securityDto)
     
         return {
-            'user': current_user,
-            'security': securityDto_new
+            'user': current_user.to_dict(),
+            'security': securityDto_new.to_dict()
         }
     
     def signout(self, token: str):

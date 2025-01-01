@@ -11,6 +11,17 @@ class UserDto:
         self.created_datetime = created_datetime
         self.modified_datetime = modified_datetime
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "display_name": self.display_name,
+            "role": self.role,
+            "pic_url": self.pic_url,
+            "created_datetime": self.created_datetime,
+            "modified_datetime": self.modified_datetime
+        }
+    
 class SecurityDto:
     def __init__(self, id: int, user_id: str, token: str, expire_datetime: Optional[str] = None, created_datetime: Optional[str] = None, modified_datetime: Optional[str] = None):
         self.id = id
@@ -20,6 +31,16 @@ class SecurityDto:
         self.created_datetime = created_datetime
         self.modified_datetime = modified_datetime
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "token": self.token,
+            "expire_datetime": self.expire_datetime,
+            "created_datetime": self.created_datetime,
+            "modified_datetime": self.modified_datetime
+        }
+    
 class SubjectDto:
     def __init__(self, id: int, name: str, created_datetime: Optional[str] = None, modified_datetime: Optional[str] = None):
         self.id = id
