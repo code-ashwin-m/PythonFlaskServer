@@ -1,6 +1,6 @@
 import sqlite3, json
 from typing import List, Optional
-from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto
+from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto, TeacherSubjectDto
 from datetime import datetime, timezone, timedelta
 
 DB_URL = 'database/users.db'
@@ -110,10 +110,15 @@ class AvailabilityDAO:
             availability_dto.modified_datetime = event_datetime
             availability_dto.created_datetime = event_datetime\
 
+            # cursor = self.conn.execute(
+            #     "INSERT INTO Availability (subject_id, user_id, start_date, end_date, start_time, end_time, days, created_datetime, modified_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            #     (availability_dto.subject_id, availability_dto.user_id, availability_dto.start_date, availability_dto.end_date, 
+            #      availability_dto.start_time, availability_dto.end_time, availability_dto.days, availability_dto.created_datetime, availability_dto.modified_datetime) 
+            # )
+
             cursor = self.conn.execute(
-                "INSERT INTO Availability (subject_id, user_id, start_date, end_date, start_time, end_time, days, created_datetime, modified_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (availability_dto.subject_id, availability_dto.user_id, availability_dto.start_date, availability_dto.end_date, 
-                 availability_dto.start_time, availability_dto.end_time, availability_dto.days, availability_dto.created_datetime, availability_dto.modified_datetime) 
+                "INSERT INTO Availability (user_id, start_time, end_time, days, created_datetime, modified_datetime) VALUES (?, ?, ?, ?, ?, ?)",
+                (availability_dto.user_id, availability_dto.start_time, availability_dto.end_time, availability_dto.days, availability_dto.created_datetime, availability_dto.modified_datetime) 
             )
             self.conn.close
             availability_dto.id = cursor.lastrowid
@@ -127,10 +132,10 @@ class AvailabilityDAO:
             )
             return result.rowcount > 0
 
-    def get_all_subjects(self, user_id: int) -> List[AvailabilityDto]:
+    def get_all_availability_by_user_id(self, user_id: int) -> List[AvailabilityDto]:
         with self.conn:
             result = self.conn.execute(
-                "SELECT Availability.*, Subjects.name as 'subject_name' FROM Availability INNER JOIN Subjects ON Availability.subject_id = Subjects.id WHERE Availability.user_id = ?",
+                "SELECT * FROM Availability WHERE user_id = ?",
                 (user_id,)
             )
             rows = result.fetchall()
@@ -145,7 +150,6 @@ class SubjectDAO:
     def create_table(self):
         return None
 
-
     def get_all_subjects(self) -> List[SubjectDto]:
         result = self.conn.execute(
             "SELECT * FROM Subjects"
@@ -153,3 +157,45 @@ class SubjectDAO:
         rows = result.fetchall()
         self.conn.close
         return [SubjectDto(*row) for row in rows]
+    
+class TeacherSubjectDAO:
+    def __init__(self):
+        self.conn = sqlite3.connect(DB_URL, check_same_thread=False)
+        self.create_table()
+    
+    def create_table(self):
+        return None
+    
+    def add_subject(self, teacher_subject_dto: TeacherSubjectDto) -> Optional[TeacherSubjectDto]:
+        with self.conn:
+            datetime_now = datetime.now(timezone.utc)
+            event_datetime = datetime_now.isoformat()
+            teacher_subject_dto.modified_datetime = event_datetime
+            teacher_subject_dto.created_datetime = event_datetime\
+
+            cursor = self.conn.execute(
+                "INSERT INTO TeacherSubjects (user_id, subject_id, created_datetime, modified_datetime) VALUES (?, ?, ?, ?)",
+                (teacher_subject_dto.user_id, teacher_subject_dto.subject_id, teacher_subject_dto.created_datetime, teacher_subject_dto.modified_datetime) 
+            )
+
+            self.conn.close
+            teacher_subject_dto.id = cursor.lastrowid
+            return teacher_subject_dto
+        
+    def delete_subject(self, id: int):
+        with self.conn:
+            result = self.conn.execute(
+                "DELETE FROM TeacherSubjects WHERE id = ?",
+                (id,)
+            )
+            return result.rowcount > 0
+        
+    def get_all_subjects_by_user_id(self, user_id: int) -> List[TeacherSubjectDto]:
+        with self.conn:
+            result = self.conn.execute(
+                "SELECT TeacherSubjects.*, Subjects.name as 'subject_name' FROM TeacherSubjects INNER JOIN Subjects ON TeacherSubjects.subject_id = Subjects.id WHERE TeacherSubjects.user_id = ?",
+                (user_id,)
+            )
+            rows = result.fetchall()
+            self.conn.close
+            return [TeacherSubjectDto(*row) for row in rows]

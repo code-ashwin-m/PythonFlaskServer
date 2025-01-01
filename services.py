@@ -1,5 +1,5 @@
-from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto
-from daos import UserDAO, SecurityDao, AvailabilityDAO, SubjectDAO
+from models import UserDto, SecurityDto, AvailabilityDto, SubjectDto, TeacherSubjectDto
+from daos import UserDAO, SecurityDao, AvailabilityDAO, SubjectDAO, TeacherSubjectDAO
 import sqlite3, json, uuid
 from typing import List, Optional
 
@@ -56,19 +56,32 @@ class ProfileService():
     def __init__(self):
         self.availability_dao = AvailabilityDAO()
         self.subject_dao = SubjectDAO()
+        self.teacher_subject_dao = TeacherSubjectDAO()
 
     
-    def add_availability(self, availability_dto: AvailabilityDto):
+    def add_availability(self, availability_dto: AvailabilityDto) -> Optional[AvailabilityDto]:
         new_item = self.availability_dao.add_availability(availability_dto)
         return new_item
     
     def delete_availability(self, id: int):
         self.availability_dao.delete_availability(id)
 
+    def get_all_availability_by_user_id(self, user_id: int) -> List[AvailabilityDto]:
+        list_items = self.availability_dao.get_all_availability_by_user_id(user_id)
+        return list_items
+    
+    def add_subject(self, teacher_subject_dto: TeacherSubjectDto):
+        new_item = self.teacher_subject_dao.add_subject(teacher_subject_dto)
+        return new_item
+    
+    def delete_subject(self, id: int):
+        self.teacher_subject_dao.delete_subject(id)
+    
+    def get_all_subjects_by_user_id(self, user_id: int) -> List[TeacherSubjectDto]:
+        list_items = self.teacher_subject_dao.get_all_subjects_by_user_id(user_id)
+        return list_items
+    
     def get_all_subjects(self) -> List[SubjectDto]:
         list_items = self.subject_dao.get_all_subjects()
         return list_items
     
-    def get_all_subjects_by_user_id(self, user_id: int) -> List[AvailabilityDto]:
-        list_items = self.availability_dao.get_all_subjects(user_id)
-        return list_items

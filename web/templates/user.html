@@ -3,12 +3,10 @@
     <h1>Edit Profile</h1>
     <p>Name: {{ user.display_name }}!</p>
 
-    <a href="{{ url_for ('subject_add') }}">Add New Subject</a>
+    <h2>Availability Information</h2>
+    <a href="{{ url_for ('availability_add') }}">Add New Availability</a>
     <table border="1">
         <tr>
-            <th>Subject</th>
-            <th>Start Date</th>
-            <th>End Date</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Days</th>
@@ -16,12 +14,25 @@
         </tr>
         {% for item in availability_list %}
         <tr>
-            <td>{{ item.subject_name }}</td>
-            <td>{{ item.start_date }}</td>
-            <td>{{ item.end_date }}</td>
             <td>{{ item.start_time }}</td>
             <td>{{ item.end_time }}</td>
-            <td>{{ item.days }}</td>
+            <td>{{ get_day_names(item.days) }}</td>
+            <td>
+                <a href="/availability/{{ item.id }}/delete">[Delete]</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Subjects</h2>
+    <a href="{{ url_for ('subject_add') }}">Add New Subject</a>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in subject_list %}
+        <tr>
+            <td>{{ item.subject_name }}</td>
             <td>
                 <a href="/subjects/{{ item.id }}/delete">[Delete]</a>
             </td>

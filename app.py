@@ -1,10 +1,8 @@
-from flask import Flask
-from flask import render_template, make_response, jsonify, redirect, url_for, session
-from flask import request
-from models import UserDto, SecurityDto, AvailabilityDto
+from flask import Flask, request, session, render_template, make_response, redirect, url_for
+from models import UserDto, SecurityDto, AvailabilityDto, TeacherSubjectDto
 from services import UserService, ProfileService
 from typing import List
-import json 
+import json, calendar
 
 app = Flask(__name__,
     static_url_path='', 
@@ -37,9 +35,19 @@ def inject_user_data():
     is_authenticated = None
     if 'user_id' in session:
         is_authenticated = True
+
+    def get_day_names(value: str):
+        values = list(value)
+        result = []
+        for item in values:
+            result.append(calendar.day_abbr[int(item)-1])
+        print(result)
+        return ", ".join(result)
+    
     return {
             'is_authenticated': is_authenticated, 
-            'site_name': 'My Flask App'
+            'site_name': 'My Flask App',
+            'get_day_names': get_day_names
         }
 
 @app.route("/")
@@ -102,11 +110,13 @@ def dashboard(security_dto: SecurityDto):
 @token_required
 def user(security_dto: SecurityDto):
     user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
-    availability_list: List[AvailabilityDto] = profile_service.get_all_subjects_by_user_id(security_dto.user_id)
+    availability_list: List[AvailabilityDto] = profile_service.get_all_availability_by_user_id(security_dto.user_id)
+    subject_list: List[TeacherSubjectDto] = profile_service.get_all_subjects_by_user_id(security_dto.user_id)
     return render_template(
         "user.html", 
         user=user_dto, 
-        availability_list=availability_list
+        availability_list=availability_list,
+        subject_list=subject_list
     )
 
 @app.route("/subjects")
@@ -119,25 +129,38 @@ def subjects(security_dto: SecurityDto):
 def subject_add(security_dto: SecurityDto):
     if request.method == 'POST':
         subject_id = request.form.get('subject')
-        start_date = request.form.get('start-date')
-        end_date = request.form.get('end-date')
-        start_time = request.form.get('start-time')
-        end_time = request.form.get('end-time')
-        days = request.form.getlist('days')
 
-        availability_dto = AvailabilityDto(None, subject_id, security_dto.user_id, start_date, end_date, start_time, end_time, "".join(days))
-        availability_dto = profile_service.add_availability(availability_dto)
-        resp = make_response(redirect('/user'))
+        teacher_subject_dto = TeacherSubjectDto(None, security_dto.user_id, subject_id)
+        teacher_subject_dto = profile_service.add_subject(teacher_subject_dto)
+        resp = make_response(redirect(url_for('user')))
         return resp
 
     subject_list = profile_service.get_all_subjects()
-    print(subject_list[0].name)
     return render_template("subjects-add.html", subject_list=subject_list)
 
-
-@app.route("/subjects/<int:availability_id>/delete", methods=['GET'])
+@app.route("/subjects/<int:id>/delete", methods=['GET'])
 @token_required
-def subject_delete(security_dto: SecurityDto, availability_id: int):
+def subject_delete(security_dto: SecurityDto, id: int):
+    profile_service.delete_subject(id)
+    resp = make_response(redirect('/user'))
+    return resp
+
+@app.route("/availability/add", methods=['GET', 'POST'])
+@token_required
+def availability_add(security_dto: SecurityDto):
+    if request.method == 'POST':
+        start_time = request.form.get('start-time')
+        end_time = request.form.get('end-time')
+        days = request.form.getlist('days')
+        availability_dto = AvailabilityDto(None, security_dto.user_id, start_time, end_time, "".join(days))
+        availability_dto = profile_service.add_availability(availability_dto)
+        resp = make_response(redirect(url_for('user')))
+        return resp
+    return render_template("availability-add.html")
+
+@app.route("/availability/<int:availability_id>/delete", methods=['GET'])
+@token_required
+def availability_delete(security_dto: SecurityDto, availability_id: int):
     profile_service.delete_availability(availability_id)
     resp = make_response(redirect('/user'))
     return resp

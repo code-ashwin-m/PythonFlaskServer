@@ -28,23 +28,28 @@ class SubjectDto:
         self.modified_datetime = modified_datetime
 
 class AvailabilityDto:
-    def __init__(self, id: int, subject_id: int, user_id: int, 
-                 start_date: Optional[str] = None, 
-                 end_date: Optional[str] = None, 
+    def __init__(self, id: int, user_id: int, 
                  start_time: Optional[str] = None, 
                  end_time: Optional[str] = None, 
                  days: Optional[str] = None, 
                  created_datetime: Optional[str] = None, 
-                 modified_datetime: Optional[str] = None,
-                 subject_name: Optional[str] = None):
-        self.id = id
-        self.subject_id = subject_id    
+                 modified_datetime: Optional[str] = None,):
+        self.id = id  
         self.user_id = user_id 
-        self.start_date = start_date 
-        self.end_date = end_date 
         self.start_time = start_time 
         self.end_time = end_time 
         self.days = days 
+        self.created_datetime = created_datetime
+        self.modified_datetime = modified_datetime
+
+class TeacherSubjectDto:
+    def __init__(self, id: int, user_id: int, subject_id: int,
+                 created_datetime: Optional[str] = None, 
+                 modified_datetime: Optional[str] = None,
+                 subject_name: Optional[str] = None):
+        self.id = id
+        self.user_id = user_id 
+        self.subject_id = subject_id    
         self.created_datetime = created_datetime
         self.modified_datetime = modified_datetime
         self.subject_name = subject_name

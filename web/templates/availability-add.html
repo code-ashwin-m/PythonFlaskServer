@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{%block content%} 
+    <h1>Add Availability</h1>
+
+    <form action="/availability/add" method="post"> 
+        <table>
+            <tr>
+                <td>Start Time</td>
+                <td>
+                    <input type="time" name="start-time" id="start-time">
+                </td>
+            </tr>
+            <tr>
+                <td>End Time</td>
+                <td>
+                    <input type="time" name="end-time" id="end-time">
+                </td>
+            </tr>
+            <tr>
+                <td>Available Day</td>
+                <td>
+                    <input type="checkbox" name="days" value="7"> SUN <br />
+                    <input type="checkbox" name="days" value="1"> MON <br />
+                    <input type="checkbox" name="days" value="2"> TUE <br />
+                    <input type="checkbox" name="days" value="3"> WED <br />
+                    <input type="checkbox" name="days" value="4"> THU <br />
+                    <input type="checkbox" name="days" value="5"> FRI <br />
+                    <input type="checkbox" name="days" value="6"> SAT <br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="Submit">
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
