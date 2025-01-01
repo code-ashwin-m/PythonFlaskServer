@@ -3,6 +3,7 @@
     <h1>Edit Profile</h1>
     <p>Name: {{ user.display_name }}!</p>
 
+    {% if user.role == 2 %}
     <h2>Availability Information</h2>
     <a href="{{ url_for ('availability_add') }}">Add New Availability</a>
     <table border="1">
@@ -32,13 +33,13 @@
         </tr>
         {% for item in subject_list %}
         <tr>
-            <td>{{ item.subject_name }}</td>
+            <td>{{ item.extra }}</td>
             <td>
                 <a href="/subjects/{{ item.id }}/delete">[Delete]</a>
             </td>
         </tr>
         {% endfor %}
     </table>
-
+    {% endif %}
 
 {% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{%block content%} 
+    <h1>Enroll Subject</h1>
+
+    <form action="/class/enroll" method="get"> 
+        <table>
+            <tr>
+                <td>Subject</td>
+                <td>
+                    
+                    <select name="subject" id="subject">
+                        {% for item in subject_list %}
+                        <option value="{{ item.id }}" {% if subject_id == item.id %} selected {% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td colspan="2">
+                    <input type="submit" value="Refresh">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <form action="" method="post">
+        <label for="teacher_id">Teacher's List</label> <br />
+        <select name="teacher_id" size="10" width="250px">  
+            {% for item in teacher_list %}
+            <option value="{{ item.id }}">{{ item.extra }}</option>
+            {% endfor %}
+        </select> <br />
+        <input type="submit" value="Enroll">
+    </form>
+{% endblock %}

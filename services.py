@@ -51,7 +51,6 @@ class UserService():
         user = self.dao.get_user_by_id(user_id)
         return user
         
-        
 class ProfileService(): 
     def __init__(self):
         self.availability_dao = AvailabilityDAO()
@@ -84,4 +83,9 @@ class ProfileService():
     def get_all_subjects(self) -> List[SubjectDto]:
         list_items = self.subject_dao.get_all_subjects()
         return list_items
+    
+    def get_all_teachers_by_subject_id(self, subject_id: int)-> List[TeacherSubjectDto]:
+        user_list = self.teacher_subject_dao.get_all_teachers_by_subject_id(subject_id)
+        return user_list
+
     

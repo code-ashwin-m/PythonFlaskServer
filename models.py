@@ -46,10 +46,10 @@ class TeacherSubjectDto:
     def __init__(self, id: int, user_id: int, subject_id: int,
                  created_datetime: Optional[str] = None, 
                  modified_datetime: Optional[str] = None,
-                 subject_name: Optional[str] = None):
+                 extra: Optional[str] = None):
         self.id = id
         self.user_id = user_id 
         self.subject_id = subject_id    
         self.created_datetime = created_datetime
         self.modified_datetime = modified_datetime
-        self.subject_name = subject_name
+        self.extra = extra

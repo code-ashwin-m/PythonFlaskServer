@@ -50,6 +50,7 @@ class UserDAO:
             return UserDto(*row)
         return None
     
+
 class SecurityDao:
     def __init__(self):
         self.conn = sqlite3.connect(DB_URL, check_same_thread=False)
@@ -193,8 +194,18 @@ class TeacherSubjectDAO:
     def get_all_subjects_by_user_id(self, user_id: int) -> List[TeacherSubjectDto]:
         with self.conn:
             result = self.conn.execute(
-                "SELECT TeacherSubjects.*, Subjects.name as 'subject_name' FROM TeacherSubjects INNER JOIN Subjects ON TeacherSubjects.subject_id = Subjects.id WHERE TeacherSubjects.user_id = ?",
+                "SELECT TeacherSubjects.*, Subjects.name as 'extra' FROM TeacherSubjects INNER JOIN Subjects ON TeacherSubjects.subject_id = Subjects.id WHERE TeacherSubjects.user_id = ?",
                 (user_id,)
+            )
+            rows = result.fetchall()
+            self.conn.close
+            return [TeacherSubjectDto(*row) for row in rows]
+        
+    def get_all_teachers_by_subject_id(self, subject_id: int) -> List[TeacherSubjectDto]:
+        with self.conn:
+            result = self.conn.execute(
+                "SELECT TeacherSubjects.*, Users.display_name as 'extra' FROM TeacherSubjects INNER JOIN Users ON TeacherSubjects.user_id = Users.id WHERE TeacherSubjects.subject_id = ?",
+                (subject_id,)
             )
             rows = result.fetchall()
             self.conn.close

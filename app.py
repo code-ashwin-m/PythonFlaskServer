@@ -164,3 +164,13 @@ def availability_delete(security_dto: SecurityDto, availability_id: int):
     profile_service.delete_availability(availability_id)
     resp = make_response(redirect('/user'))
     return resp
+
+@app.route("/class/enroll", methods=['GET', 'POST'])
+@token_required
+def class_enroll(security_dto: SecurityDto):
+    subject_id = request.args.get('subject')
+    if subject_id:
+        subject_id = int(subject_id)
+    teacher_list = profile_service.get_all_teachers_by_subject_id(subject_id)
+    subject_list = profile_service.get_all_subjects()
+    return render_template("class-enroll.html", subject_id=subject_id, subject_list=subject_list, teacher_list=teacher_list)
