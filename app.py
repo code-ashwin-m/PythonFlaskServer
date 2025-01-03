@@ -1,8 +1,9 @@
 from flask import Flask, request, session, render_template, make_response, redirect, url_for
-from models import UserDto, SecurityDto, AvailabilityDto, TeacherSubjectDto
 from services import UserService, ProfileService
 from typing import List
 import json, calendar
+
+from model import User, Security, TeacherSubject, Availability
 
 app = Flask(__name__,
     static_url_path='', 
@@ -20,12 +21,12 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = request.cookies.get('token')
         if not token:
-            return redirect(url_for('login'))
+            return redirect(url_for('web_login'))
         try:
-           security_dto = user_service.security_check(token)
+           security = user_service.security_check1(token)
         except Exception as ex:
-            return redirect(url_for('login'))
-        return f(security_dto, *args, **kwargs)
+            return redirect(url_for('web_login'))
+        return f(security, *args, **kwargs)
     decorated.__name__ = f.__name__
     return decorated
 
@@ -61,11 +62,15 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
         role = int(request.form.get('role'))
-
         try:
-            user_dto = UserDto(None, email, password, name, role) 
-            new_user = user_service.signup(user_dto)
-                
+            _user = User(
+                id=None,
+                email=email, 
+                password=password, 
+                name=name, 
+                role=role
+            )
+            user_service.signup1(_user)
         except Exception as ex:
             return render_template("register.html", error=ex)
     return render_template("register.html")
@@ -77,12 +82,11 @@ def api_login():
     email = data.get('email', '')
     password = data.get('password', '')
     try:
-        sign_in_data = login(email, password)
-        jsonstr = json.dumps(sign_in_data) 
-        # return jsonstr, 200, {'Content-Type': 'application/json; charset=utf-8'}
+        user, security = login1(email, password)
+        jsonstr = json.dumps(user.__dict__) 
         resp = make_response(jsonstr)
         resp.headers["Content-Type"] = "application/json; charset=utf-8"
-        resp.set_cookie('token', sign_in_data['security']['token'])
+        resp.set_cookie('token', security.token)
         return resp
     except Exception as ex:
         return "{\"error\"=\"" + str(ex) + "\"}"
@@ -93,25 +97,25 @@ def web_login():
         email = request.form.get('email')
         password = request.form.get('password')
         try:
-            sign_in_data = login(email, password)
-            session['user_id'] = sign_in_data['user']['id']
+            user, security = login1(email, password)
+            session['user_id'] = user.id
             resp = make_response(redirect('dashboard'))
-            resp.set_cookie('token', sign_in_data['security']['token'])
+            resp.set_cookie('token', security.token)
             return resp
         except Exception as ex:
-            return render_template("login.html", error=ex)
+                return render_template("login.html", error=ex)
     return render_template("login.html")
 
-def login(email: str, password: str):
-    user_dto = UserDto(None, email, password, None, None) 
-    sign_in_data = user_service.signin(user_dto)
-    return sign_in_data
+def login1(email: str, password: str):
+    user = User(None, email, password, None, None) 
+    user, security = user_service.signin1(user)
+    return user, security
 
 @app.route("/api/logout", methods=['POST'])
 def api_logout():
     try:
         token = request.cookies.get('token')
-        sign_out_data = user_service.signout(token)
+        user_service.signout1(token)
         resp = make_response("{\"status\"=\"success\"}")
         resp.headers["Content-Type"] = "application/json; charset=utf-8"
         resp.set_cookie('token', '')
@@ -121,9 +125,9 @@ def api_logout():
     
 @app.route("/logout", methods=['GET', 'POST'])
 @token_required
-def web_logout(security_dto: SecurityDto):
+def web_logout(security: Security):
     try:
-        sign_out_data = user_service.signout(security_dto.token)
+        user_service.signout1(security.token)
         session.pop('user_id', None)
         resp = make_response(redirect(url_for('web_login')))
         resp.set_cookie('token', '')
@@ -133,75 +137,74 @@ def web_logout(security_dto: SecurityDto):
     
 @app.route("/dashboard")
 @token_required
-def dashboard(security_dto: SecurityDto):
-    user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
-    return render_template("dashboard.html", user=user_dto)
+def dashboard(security: Security):
+    user: User = user_service.get_user_info_by_id1(security.user_id)
+    return render_template("dashboard.html", user=user)
 
 @app.route("/user")
 @token_required
-def user(security_dto: SecurityDto):
-    user_dto: UserDto = user_service.get_user_info_by_id(security_dto.user_id)
-    availability_list: List[AvailabilityDto] = profile_service.get_all_availability_by_user_id(security_dto.user_id)
-    subject_list: List[TeacherSubjectDto] = profile_service.get_all_subjects_by_user_id(security_dto.user_id)
+def user(security: Security):
+    user: User = user_service.get_user_info_by_id1(security.user_id)
+    availabilities: List[Availability] = profile_service.get_all_availability_by_user_id1(security.user_id)
+    subjects: List[TeacherSubject] = profile_service.get_all_subjects_by_user_id1(security.user_id)
     return render_template(
         "user.html", 
-        user=user_dto, 
-        availability_list=availability_list,
-        subject_list=subject_list
+        user=user, 
+        availability_list=availabilities,
+        subject_list=subjects
     )
 
 @app.route("/subjects")
 @token_required
-def subjects(security_dto: SecurityDto):
+def subjects(security: Security):
     return render_template("subjects.html")
 
 @app.route("/subjects/add", methods=['GET', 'POST'])
 @token_required
-def subject_add(security_dto: SecurityDto):
+def subject_add(security: Security):
     if request.method == 'POST':
         subject_id = request.form.get('subject')
-
-        teacher_subject_dto = TeacherSubjectDto(None, security_dto.user_id, subject_id)
-        teacher_subject_dto = profile_service.add_subject(teacher_subject_dto)
+        teacher_subjects = TeacherSubject(None, security.user_id, subject_id)
+        profile_service.add_subject1(teacher_subjects)
         resp = make_response(redirect(url_for('user')))
         return resp
 
-    subject_list = profile_service.get_all_subjects()
-    return render_template("subjects-add.html", subject_list=subject_list)
+    subjects = profile_service.get_all_subjects1()
+    return render_template("subjects-add.html", subject_list=subjects)
 
 @app.route("/subjects/<int:id>/delete", methods=['GET'])
 @token_required
-def subject_delete(security_dto: SecurityDto, id: int):
-    profile_service.delete_subject(id)
+def subject_delete(security: Security, id: int):
+    profile_service.delete_subject1(id)
     resp = make_response(redirect('/user'))
     return resp
 
 @app.route("/availability/add", methods=['GET', 'POST'])
 @token_required
-def availability_add(security_dto: SecurityDto):
+def availability_add(security: Security):
     if request.method == 'POST':
         start_time = request.form.get('start-time')
         end_time = request.form.get('end-time')
         days = request.form.getlist('days')
-        availability_dto = AvailabilityDto(None, security_dto.user_id, start_time, end_time, "".join(days))
-        availability_dto = profile_service.add_availability(availability_dto)
+        availability = Availability(None, security.user_id, start_time, end_time, "".join(days))
+        profile_service.add_availability1(availability)
         resp = make_response(redirect(url_for('user')))
         return resp
     return render_template("availability-add.html")
 
 @app.route("/availability/<int:availability_id>/delete", methods=['GET'])
 @token_required
-def availability_delete(security_dto: SecurityDto, availability_id: int):
-    profile_service.delete_availability(availability_id)
+def availability_delete(security: Security, availability_id: int):
+    profile_service.delete_availability1(availability_id)
     resp = make_response(redirect('/user'))
     return resp
 
 @app.route("/class/enroll", methods=['GET', 'POST'])
 @token_required
-def class_enroll(security_dto: SecurityDto):
+def class_enroll(security: Security):
     subject_id = request.args.get('subject')
     if subject_id:
         subject_id = int(subject_id)
-    teacher_list = profile_service.get_all_teachers_by_subject_id(subject_id)
-    subject_list = profile_service.get_all_subjects()
-    return render_template("class-enroll.html", subject_id=subject_id, subject_list=subject_list, teacher_list=teacher_list)
+    teachers = profile_service.get_all_teachers_by_subject_id1(subject_id)
+    subjects = profile_service.get_all_subjects1()
+    return render_template("class-enroll.html", subject_id=subject_id, subject_list=subjects, teacher_list=teachers)

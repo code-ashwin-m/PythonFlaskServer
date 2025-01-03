@@ -1,6 +1,6 @@
 /.venv
 /venv
 **/__pycache__
-**/._*
+**/._**.db
 **/._*.*
 **/._.DS_Store
