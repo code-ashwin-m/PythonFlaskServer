@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-debug>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.js"></script>
+</head>
+
+<body class="sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
+    <div class="wrapper" ng-controller="MainController">
+        <!-- <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a ng-href="#!/" class="nav-link active" aria-current="page">Home</a></li>
+                <li class="nav-item" ng-if="!isAuthenticated"><a ng-href="#!/register" class="nav-link">Register</a></li>
+                <li class="nav-item" ng-if="!isAuthenticated"><a ng-href="#!/login" class="nav-link">Login</a></li>
+                <li class="nav-item" ng-if="isAuthenticated"><a ng-click="logout()" class="nav-link">Logout</a></li>
+            </ul>
+        </header> -->
+        <div class="main-header navbar navbar-expand">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#">Home</a>
+                </li>
+            </ul>
+        </div>
+        <aside class="main-sidebar elevation-4 mt-2">
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img class="profile-user-img img-fluid img-circle"
+                                src="https://adminlte.io/themes/v3/dist/img/user4-128x128.jpg"
+                                alt="User profile picture">
+                        </div>
+                        <h3 class="profile-username text-center">Nina Mcintire</h3>
+                        <p class="text-muted text-center">Stundent</p>
+                        <a href="#" class="btn btn-primary btn-block"><b>View Profile</b></a>
+                    </div>
+                </div>
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Starter Pages
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Active Page</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Inactive Page</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                Simple Link
+                                <span class="right badge badge-danger">New</span>
+                              </p>
+                            </a>
+                          </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div ng-view></div>
+        <div class="main-footer">
+            <h1>Hai</h1>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/services/shared.js"></script>
+    <script src="/js/controller/main.js"></script>
+    <script src="/js/controller/home.js"></script>
+    <script src="/js/controller/login.js"></script>
+    <script src="/js/controller/register.js"></script>
+</body>
+
+</html>

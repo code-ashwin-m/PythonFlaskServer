@@ -1,0 +1,23 @@
+.content-wrapper{
+    /* background-color: red; */
+}
+.main-header {
+    /* background-color: green; */
+}
+.main-sidebar {
+
+}
+.sidebar{
+    margin-top: 0px !important;
+    background-color: #fff;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar .card .btn-block,
+.sidebar-mini.sidebar-collapse .main-sidebar .card .profile-username,
+.sidebar-mini.sidebar-collapse .main-sidebar .card .btn,
+.sidebar-mini.sidebar-collapse .main-sidebar .card .text-muted {
+    display: none;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar .card-body {
+    padding: 0px;
+}

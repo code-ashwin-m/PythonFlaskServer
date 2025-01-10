@@ -19,20 +19,20 @@ class UserDAO:
     def create_table(self):
         return None
     
-    def add_user1(self, user: User) -> Optional[User]:
+    def add_user(self, user: User) -> Optional[User]:
         event_datetime = datetime.now(timezone.utc).isoformat()
         user.modified_datetime = event_datetime
         user.created_datetime = event_datetime
         BaseDao.save(User, user)
         return user
 
-    def get_user_by_email1(self, email: str) -> Optional[User]:
+    def get_user_by_email(self, email: str) -> Optional[User]:
         users = BaseDao.execute_query(BaseDao.query_builder(User).select().where(email=email).build(), False)
         if len(users) > 0 :
             return users[0]
         return None
     
-    def get_user_by_id1(self, id: int) -> Optional[User]:
+    def get_user_by_id(self, id: int) -> Optional[User]:
         user = BaseDao.get_by_id(User, id)
         return user
     
@@ -46,7 +46,7 @@ class SecurityDao:
     def create_table(self):
         return None
     
-    def add_security1(self, security: Security) -> Optional[Security]:
+    def add_security(self, security: Security) -> Optional[Security]:
         datetime_now = datetime.now(timezone.utc)
         datetime_expire = datetime_now + self.time_change
         event_datetime = datetime_now.isoformat()
@@ -56,14 +56,15 @@ class SecurityDao:
         BaseDao.save(Security, security)
         return security
         
-    def get_security_by_token1(self, token: str) -> Optional[Security]:
+    def get_security_by_token(self, token: str) -> Optional[Security]:
         securities = BaseDao.execute_query(BaseDao.query_builder(Security).select('*').where(token=token).build(), False)
         if len(securities) > 0:
             return securities[0]
         return None
 
-    def delete_security_by_token1(self, token: str) -> bool:
-        BaseDao.execute_query(BaseDao.delete_builder(Security).where(token=token).build())
+    def delete_security_by_token(self, token: str) -> bool:
+        dq = BaseDao.delete_builder(Security).where(token=token).build()
+        BaseDao.execute_query(dq)
         return True
 
 class AvailabilityDAO:
@@ -75,7 +76,7 @@ class AvailabilityDAO:
     def create_table(self):
         return None
     
-    def add_availability1(self, availability: Availability) -> Optional[Availability]:
+    def add_availability(self, availability: Availability) -> Optional[Availability]:
         datetime_now = datetime.now(timezone.utc)
         event_datetime = datetime_now.isoformat()
         availability.modified_datetime = event_datetime
@@ -83,10 +84,10 @@ class AvailabilityDAO:
         BaseDao.save(Availability, availability)
         return availability
     
-    def delete_availability1(self, id: int) -> bool:
+    def delete_availability(self, id: int) -> bool:
         BaseDao.execute_query(BaseDao.delete_builder(Availability).where(id=id).build())
 
-    def get_all_availability_by_user_id1(self, user_id: int) -> List[Availability]:
+    def get_all_availability_by_user_id(self, user_id: int) -> List[Availability]:
         results = BaseDao.execute_query(BaseDao.query_builder(Availability).select('*').where(user_id=user_id).build())
         return results
         
@@ -99,7 +100,7 @@ class SubjectDAO:
     def create_table(self):
         return None
 
-    def get_all_subjects1(self) -> List[Subject]:
+    def get_all_subjects(self) -> List[Subject]:
         return BaseDao.all(Subject, False)
 
 class TeacherSubjectDAO:
@@ -111,7 +112,7 @@ class TeacherSubjectDAO:
     def create_table(self):
         return None
         
-    def add_subject1(self, teacher_subject: TeacherSubject) -> Optional[TeacherSubject]:
+    def add_subject(self, teacher_subject: TeacherSubject) -> Optional[TeacherSubject]:
         datetime_now = datetime.now(timezone.utc)
         event_datetime = datetime_now.isoformat()
         teacher_subject.modified_datetime = event_datetime
@@ -121,16 +122,16 @@ class TeacherSubjectDAO:
             return teacher_subject
         return None
     
-    def delete_subject1(self, id: int):
+    def delete_subject(self, id: int):
         BaseDao.execute_query(BaseDao.delete_builder(TeacherSubject).where(id=id).build())
         
-    def get_all_subjects_by_user_id1(self, user_id: int) -> List[TeacherSubject]:
+    def get_all_subjects_by_user_id(self, user_id: int) -> List[TeacherSubject]:
         query = BaseDao.query_builder(TeacherSubject).build()
         query.query = "SELECT TeacherSubjects.*, Subjects.name as 'extra' FROM TeacherSubjects INNER JOIN Subjects ON TeacherSubjects.subject_id = Subjects.id WHERE TeacherSubjects.user_id = ?"
         query.params.append(user_id)
         return BaseDao.execute_query(query, False)
 
-    def get_all_teachers_by_subject_id1(self, subject_id: int) -> List[TeacherSubject]:
+    def get_all_teachers_by_subject_id(self, subject_id: int) -> List[TeacherSubject]:
         query = BaseDao.query_builder(TeacherSubject).build()
         query.query = "SELECT TeacherSubjects.*, Users.name as 'extra' FROM TeacherSubjects INNER JOIN Users ON TeacherSubjects.user_id = Users.id WHERE TeacherSubjects.subject_id = ?"
         query.params.append(subject_id)
